@@ -15,7 +15,7 @@ public class ATMGame {
             {"Charlie4", "5000"},
     };
 
-   // Method to check if there is enough money to transfer to the other user.
+    // Method to check if there is enough money to transfer to the other user.
     static boolean checkTransferPossible(int balance, int userInput){
         int result = balance - userInput;
         boolean balanceStatus = (result >= 0) ? true : false;
@@ -103,7 +103,16 @@ public class ATMGame {
 
     // Method to retrieve the user information that the user wishes to transfer to.
     static String fetchAccountInformation(int userAccountNumber, String[][] userAccounts) {
-     return userAccounts[userAccountNumber][0] + ", Balance:" + userAccounts[userAccountNumber][1];
+        return userAccounts[userAccountNumber][0] + ", Balance:" + userAccounts[userAccountNumber][1];
+    }
+
+    // Method to display all the available accounts to transfer to.
+    static String availableAccounts(String[][] userAccounts, int userAccountNumber) {
+        String myText = "";
+        for (int i = 0; i < userAccountNumber; i++) {
+            myText = myText + "\n" + userAccounts[i][0];
+        }
+        return myText;
     }
 
     // Check if the bank transfer is possible e.g. existing account.
@@ -136,64 +145,65 @@ public class ATMGame {
         // Count the number of existing bank accounts.
         int userAccountNumber = userAccounts.length;
 
-            // Run program until asked by the user to do so.
-            while (systemStatus) {
+        // Run program until asked by the user to do so.
+        while (systemStatus) {
 
-                // Prompt user to enter the account to transfer to and store it.
-                System.out.println("Please select which account you wish to transfer to:" +
-                        " from 0-2");
-                int currentAccountNumber = storeUserBank(userAccountNumber, userAccounts);
+            // Prompt user to enter the account to transfer to and store it.
+            System.out.println(availableAccounts(userAccounts, userAccountNumber));
+            System.out.println("Please select which account you wish to transfer to:" +
+                    " from 0-2");
+            int currentAccountNumber = storeUserBank(userAccountNumber, userAccounts);
 
-                // Collect and check if the user input is a valid amount to transfer.
-                boolean amountStatus = true;
-                System.out.println("Please enter the amount you wish to transfer. ");
-                int userInput = scanner.nextInt();
-                while (amountStatus) {
-                    if (checkValidNumber(userInput)) {
-                        amountStatus = false;
-                    }
-                    else {
-                        System.out.println("Invalid number to transfer. Please try again. ");
-                        userInput = scanner.nextInt();
-                    }
+            // Collect and check if the user input is a valid amount to transfer.
+            boolean amountStatus = true;
+            System.out.println("Please enter the amount you wish to transfer. ");
+            int userInput = scanner.nextInt();
+            while (amountStatus) {
+                if (checkValidNumber(userInput)) {
+                    amountStatus = false;
                 }
-
-                // Output if the user can transfer the money.
-                System.out.println(moneyTransferStatus(balance, userInput));
-
-                // Check if the transfer is possible without being overdraft else show unsuccessful error.
-                if (checkTransferPossible(balance, userInput)) {
-
-                    // Make the user confirm their decision.
-                    System.out.println("Do you wish to proceed? y/n");
-
-                    // Check if the transfer decision is yes and proceed else show unsuccessful.
-                    if (userAnswerValidation()) {
-                        System.out.println("Transfer was success. ");
-
-                        // Transfer the user's input for the money to the recipient.
-                        balance = removeSenderMoney(userInput, balance);
-                        int recipientBalance = addRecipientMoney(userInput, userAccounts, currentAccountNumber);
-                        System.out.println("Your new balance is: " + balance + " and " +
-                                userAccounts[currentAccountNumber][0] + " is now: " + recipientBalance);
-                    } else {
-                        System.out.println("Transfer was unsuccessful");
-                    }
-                } else {
-                    System.out.println("Transfer was unsuccessful as you do not have sufficient funds. ");
-                }
-
-                // Ask if the user wishes to do another transaction
-                System.out.println("Do you wish to do another transaction? y/n");
-
-                // Check the user decision to do another transaction else terminate the program.
-                if (userAnswerValidation()) {
-                    systemStatus = true;
-                } else {
-                    System.out.println("Thank you for using this service.");
-                    System.exit(0);
+                else {
+                    System.out.println("Invalid number to transfer. Please try again. ");
+                    userInput = scanner.nextInt();
                 }
             }
+
+            // Output if the user can transfer the money.
+            System.out.println(moneyTransferStatus(balance, userInput));
+
+            // Check if the transfer is possible without being overdraft else show unsuccessful error.
+            if (checkTransferPossible(balance, userInput)) {
+
+                // Make the user confirm their decision.
+                System.out.println("Do you wish to proceed? y/n");
+
+                // Check if the transfer decision is yes and proceed else show unsuccessful.
+                if (userAnswerValidation()) {
+                    System.out.println("Transfer was success. ");
+
+                    // Transfer the user's input for the money to the recipient.
+                    balance = removeSenderMoney(userInput, balance);
+                    int recipientBalance = addRecipientMoney(userInput, userAccounts, currentAccountNumber);
+                    System.out.println("Your new balance is: " + balance + " and " +
+                            userAccounts[currentAccountNumber][0] + " is now: " + recipientBalance);
+                } else {
+                    System.out.println("Transfer was unsuccessful");
+                }
+            } else {
+                System.out.println("Transfer was unsuccessful as you do not have sufficient funds. ");
+            }
+
+            // Ask if the user wishes to do another transaction
+            System.out.println("Do you wish to do another transaction? y/n");
+
+            // Check the user decision to do another transaction else terminate the program.
+            if (userAnswerValidation()) {
+                systemStatus = true;
+            } else {
+                System.out.println("Thank you for using this service.");
+                System.exit(0);
+            }
+        }
         scanner.close();
     }
 }
