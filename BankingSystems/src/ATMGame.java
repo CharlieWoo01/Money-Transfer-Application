@@ -11,7 +11,8 @@ public class ATMGame {
     public static String[][] userAccounts = {
             {"Charlie", "2000"},
             {"Charlie2", "3000"},
-            {"Charlie3", "4000"}
+            {"Charlie3", "4000"},
+            {"Charlie4", "5000"},
     };
 
    // Method to check if there is enough money to transfer to the other user.
